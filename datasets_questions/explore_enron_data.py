@@ -19,4 +19,30 @@ import pickle
 
 enron_data = pickle.load(open("../final_project/final_project_dataset.pkl", "r"))
 
+#print enron_data.values()[1]
+#enron_data.get('poi')[1]
 
+#print (enron_data)
+
+#print enron_data[person_name]["poi"]==1
+
+
+n = 0
+for k in enron_data:
+  n += 1 if (enron_data[k]["total_payments"] =='NaN') & (enron_data[k]['poi']==True) else 0
+
+print n
+
+l = 0
+for k in enron_data:
+  l += 1 if (enron_data[k]['poi']==True) else 0
+print l
+
+
+print float(n)/float(l)
+
+
+#enron_data["LASTNAME FIRSTNAME"]["feature_name"]
+#enron_data["LASTNAME FIRSTNAME MIDDLEINITIAL"]["feature_name"]
+#print enron_data.keys()
+#print enron_data["COLWELL WESLEY"]

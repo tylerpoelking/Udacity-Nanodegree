@@ -11,7 +11,7 @@ numpy.random.seed(42)
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
 word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+authors = pickle.load( open(authors_file, "r"))
 
 
 
@@ -38,6 +38,65 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+
+from sklearn.tree import DecisionTreeClassifier
+# clf = DecisionTreeClassifier()
+# clf.fit_transform(features_train,labels_train)
+
+# pred = clf.predict(features_test)
+# from sklearn.metrics import accuracy_score
+# acc = accuracy_score(pred, labels_test)
+# #print acc
+# importances= clf.feature_importances_
+# #print(len(importances))
+# cnt = 0
+# for i in importances:
+# 	if i>.2:
+# 		print str(i) +' Occured at index' +str(cnt)
+# 		important = i
+# 	cnt=cnt+1
+
+
+
+# print importances
+# print list(clf.feature_importances_).index(important)
+
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+
+clf = clf.fit(features_train, labels_train)
+
+pred = clf.predict(features_test, labels_test)
+
+acc = accuracy_score(pred, labels_test)
+print "acc:", acc
+
+most_important = max(clf.feature_importances_)
+
+print "Most Important:", most_important
+importances = []
+for i in clf.feature_importances_:
+	if i>0.2:
+		importances.append(i)
+
+num_max = 0
+most_important = 0
+k = 0
+
+print 'Number of outliers w/ importance above .2: ', len(importances)
+for i in clf.feature_importances_:
+	if i > most_important:
+		most_important = i
+		num_max = k
+	k = k + 1
+	
+
+print "position most importance:", num_max
+
+print "Word at this position:", vectorizer.get_feature_names()[num_max]
+
+
 
 
 

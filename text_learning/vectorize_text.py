@@ -28,7 +28,7 @@ from_chris = open("from_chris.txt", "r")
 
 from_data = []
 word_data = []
-
+    
 ### temp_counter is a way to speed up the development--there are
 ### thousands of emails from Sara and Chris, so running over all of them
 ### can take a long time
@@ -41,27 +41,61 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
+        #temp_counter += 1
         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
-            print path
+            #print path
             email = open(path, "r")
 
+            words = parseOutText(email)
             ### use parseOutText to extract the text from the opened email
-
             ### use str.replace() to remove any instances of the words
-            ### ["sara", "shackleton", "chris", "germani"]
-
+            prohibitedWords= ["sara", "shackleton", "chris", "germani","sshacklensf","cgermannsf"]
+            big_regex = re.compile('|'.join(map(re.escape, prohibitedWords)))
+            the_email = big_regex.sub("", words)
+            #print the_email
+            #print the_email
             ### append the text to word_data
 
+            word_data.append(the_email)
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+            if name =='sara':
+                from_data.append(0)
+            if name =='chris':
+                from_data.append(1)
 
 
             email.close()
 
 print "emails processed"
+#print word_data[152]
 from_sara.close()
 from_chris.close()
+
+
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# vec = TfidfVectorizer(stop_words = 'english')
+
+# try1 = vec.fit_transform(word_data)
+
+# print try1
+#print len(vec.get_params())
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
+vec = TfidfVectorizer(stop_words='english')
+# vectorized_word_data is matrix of word position, weight
+# not needed to answer on "Text Learning" lesson assignment questions
+vectorized_word_data = vec.fit_transform(word_data)
+# that's a list of feature names
+vocab_list = vec.get_feature_names()
+# len of unique words
+print(vocab_list)
+print(len(vocab_list))
+# feature name, assignment is asking for
+print(vocab_list[34597])
+
 
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
